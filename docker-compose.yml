@@ -1,0 +1,50 @@
+services:
+  laravel:
+    # Using build to create a image using the docker file
+    build: 
+      # Path context
+      context: ./php_laravel
+      # Dockerfile name in path context
+      dockerfile: Dockerfile
+    # The imagem name built
+    image: netosantos122/phplaravelapp
+    container_name: laravel
+    networks:
+      - mynetwork
+    ports:
+      - "8000:8000"
+
+  node:
+    build: 
+      context: ./node
+      dockerfile: Dockerfile
+    image: netosantos122/nodeapp
+    container_name: node
+    # volumes:
+    #   - "/node:/usr/src/app"
+    networks:
+      - mynetwork
+    ports:
+      - "8080:80"
+
+  db:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: netosantos122/postgre    
+    container_name: database
+    restart: always    
+    tty: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - "/database:/var/lib/postgresql/data"
+    networks:
+      - mynetwork
+
+volumes:
+  database:
+networks:
+  mynetwork:
+    driver: "bridge"
+  
